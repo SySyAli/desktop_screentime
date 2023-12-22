@@ -14,8 +14,12 @@ public:
   // default ctor.
   AppTracker();
 
-  // startTracking Method -  throws error if OS is not windows
-  [[noreturn]] void startTracking();
+  // startTracking Method -  throws error if OS is not windows. controlled by
+  // tracking boolean
+  void startTracking();
+
+  // sets tracking boolean to false
+  void stopTracking();
 
   // return a vector of all the AppEntries from the AppUsage table
   std::vector<AppEntry> getAppEntries();
@@ -23,8 +27,10 @@ public:
 private:
   // DatabaseManager for the AppTracker
   DatabaseManager dbManager;
+  // boolean for tracking
+  bool tracking;
   // startTracking Method - make throws error if not windows
-  [[noreturn]] void startTrackingWindows();
+  void startTrackingWindows();
 };
 
 #endif // APPTRACKER_H

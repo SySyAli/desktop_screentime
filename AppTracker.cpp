@@ -13,9 +13,9 @@
 #include <windows.h>
 #endif
 
-AppTracker::AppTracker() : dbManager(DatabaseManager()) {}
+AppTracker::AppTracker() : dbManager(DatabaseManager()), tracking(true) {}
 
-[[noreturn]] void AppTracker::startTracking() {
+void AppTracker::startTracking() {
 
 #ifndef _WIN32
   startTrackingWindows();
@@ -27,11 +27,17 @@ AppTracker::AppTracker() : dbManager(DatabaseManager()) {}
 #endif
 }
 
-[[noreturn]] void AppTracker::startTrackingWindows() {
+void AppTracker::stopTracking() { tracking = false; }
+
+std::vector<AppEntry> AppTracker::getAppEntries() {
+  return dbManager.getAppEntries();
+}
+
+void AppTracker::startTrackingWindows() {
   char windowTitle[256];
   AppEntry prevEntry;
 
-  while (true) {
+  while (tracking) {
     HWND hwnd = GetForegroundWindow();
     GetWindowText(hwnd, windowTitle, sizeof(windowTitle));
     std::string title(windowTitle);
@@ -64,10 +70,6 @@ AppTracker::AppTracker() : dbManager(DatabaseManager()) {}
         prevEntry.setStartTime(curTime);
       }
     }
-    Sleep(1000); // Check every second
+    Sleep(1000); // Check every second, check if this should be changed
   }
-}
-
-std::vector<AppEntry> AppTracker::getAppEntries() {
-  return dbManager.getAppEntries();
 }
