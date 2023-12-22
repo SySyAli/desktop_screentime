@@ -15,18 +15,24 @@ DatabaseManager::DatabaseManager() {
     createTable(db);
 }
 
-void DatabaseManager::insertData(const AppEntry& appEntry) {
+void DatabaseManager::insertData(AppEntry& appEntry) {
     const char* insertSql = "INSERT INTO AppUsage (title, startTime, endTime) VALUES (?, ?, ?)";
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db, insertSql, -1, &stmt, NULL);
 
     if(rc == SQLITE_OK) {
-        sqlite3_bind_text(stmt, 1, appEntry.getTitle.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int64(stmt, 2, static_cast<long long>(appEntry.getStartTime));
-        sqlite3_bind_int64(stmt, 3, static_cast<long long>(appEntry.getEndTime));
+        sqlite3_bind_text(stmt, 1, appEntry.getTitle().c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int64(stmt, 2, static_cast<long long>(appEntry.getStartTime()));
+        sqlite3_bind_int64(stmt, 3, static_cast<long long>(appEntry.getEndTime()));
 
         rc = sqlite3_step(stmt);
-        if(rc != SQLITE_DONE) {
+        if(rc == SQLITE_DONE) {
+            // Get the last inserted row ID
+            long long insertedId = sqlite3_last_insert_rowid(db);
+            appEntry.setID(insertedId);
+
+            std::cout << "Inserted ID: " << insertedId << std::endl;
+        } else {
             std::cerr << "Insertion error: " << sqlite3_errmsg(db) << std::endl;
         }
 
@@ -45,8 +51,8 @@ void DatabaseManager::queryData() {
         while(sqlite3_step(stmt) == SQLITE_ROW) {
             int id = sqlite3_column_int(stmt, 0);
             const unsigned char* title = sqlite3_column_text(stmt, 1);
-            std::time_t startTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 2));
-            std::time_t endTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 3));
+            auto startTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 2));
+            auto endTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 3));
 
             std::cout << "ID: " << id << ", Title: " << title
                       << ", Start Time: " << startTime

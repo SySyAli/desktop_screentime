@@ -15,7 +15,7 @@ public:
 
     DatabaseManager& operator=(const DatabaseManager & rhs) = default;
 
-    void insertData(const AppEntry& appEntry);
+    void insertData(AppEntry& appEntry);
 
     void queryData();
 

@@ -11,24 +11,35 @@
 class AppEntry {
 public:
     // default ctor
-    AppEntry();
+    AppEntry() = delete;
+
     // alternate ctor
+    AppEntry(std::string  ti, std::time_t sT, std::time_t eT, const long long& i = 0);
+
     // just default the assignment and cctor
-    // maybe even move ctor and assignment op
+    AppEntry(const AppEntry & copy) = default;
+
+    AppEntry& operator=(const AppEntry & rhs) = default;
 
     // variety of setters/getters
+    void setID(const long long i);
+    long long getID() const;
 
-    // get id
-    // get title
-    // get startTime
-    // get endTime
+    void setTitle(const std::string& t);
+    [[nodiscard]] std::string getTitle() const;
+
+    void setStartTime(std::time_t sT);
+    [[nodiscard]] std::time_t getStartTime() const;
+
+    void setEndTime(std::time_t sT);
+    [[nodiscard]] std::time_t getEndTime() const;
 
 private:
-    int id;
+    long long id;
     std::string title;
     std::time_t startTime;
     std::time_t endTime;
 };
 
 
-#endif //DESKTOP_SCREENTIME_APPENTRY_H
+#endif //APPENTRY_H
