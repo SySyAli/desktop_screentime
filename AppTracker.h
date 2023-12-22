@@ -2,8 +2,8 @@
 // Created by syeda on 12/21/2023.
 //
 
-#ifndef DESKTOP_SCREENTIME_APPTRACKER_H
-#define DESKTOP_SCREENTIME_APPTRACKER_H
+#ifndef APPTRACKER_H
+#define APPTRACKER_H
 
 class AppTracker {
 
@@ -13,4 +13,4 @@ class AppTracker {
     // private - database
 };
 
-#endif // DESKTOP_SCREENTIME_APPTRACKER_H
+#endif // APPTRACKER_H

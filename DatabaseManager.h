@@ -1,21 +1,29 @@
-//
-// Created by syeda on 12/21/2023.
-//
+// TODO COMMENTS
 
-#ifndef DESKTOP_SCREENTIME_DATABASEMANAGER_H
-#define DESKTOP_SCREENTIME_DATABASEMANAGER_H
+#ifndef DATABASEMANAGER_H
+#define DATABASEMANAGER_H
+
+#include <sqlite3.h>
+#include <string>
+#include "AppEntry.h"
 
 class DatabaseManager {
+public:
+    DatabaseManager();
 
-    // ctor - create db here/ find etc. etc.
+    DatabaseManager(const DatabaseManager & copy) = default;
 
-    // create
-    // getters (read)
-    // setters (update)
-    // destroyer
+    DatabaseManager& operator=(const DatabaseManager & rhs) = default;
 
+    void insertData(const AppEntry& appEntry);
+
+    void queryData();
+
+private:
+    sqlite3* db;
+
+    // create a table
+    static void createTable(sqlite3* dbToCreate);
 };
 
-
-
-#endif // DESKTOP_SCREENTIME_DATABASEMANAGER_H
+#endif // DATABASEMANAGER_H

@@ -2,8 +2,8 @@
 // Created by syeda on 12/21/2023.
 //
 
-#ifndef DESKTOP_SCREENTIME_APPENTRY_H
-#define DESKTOP_SCREENTIME_APPENTRY_H
+#ifndef APPENTRY_H
+#define APPENTRY_H
 
 #include <string>
 #include <ctime>
@@ -17,6 +17,11 @@ public:
     // maybe even move ctor and assignment op
 
     // variety of setters/getters
+
+    // get id
+    // get title
+    // get startTime
+    // get endTime
 
 private:
     int id;
