@@ -3,27 +3,27 @@
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 
+#include "AppEntry.h"
 #include <sqlite3.h>
 #include <string>
-#include "AppEntry.h"
 
 class DatabaseManager {
 public:
-    DatabaseManager();
+  DatabaseManager();
 
-    DatabaseManager(const DatabaseManager & copy) = default;
+  DatabaseManager(const DatabaseManager &copy) = default;
 
-    DatabaseManager& operator=(const DatabaseManager & rhs) = default;
+  DatabaseManager &operator=(const DatabaseManager &rhs) = default;
 
-    void insertData(AppEntry& appEntry);
+  void insertData(AppEntry &appEntry);
 
-    void queryData();
+  void queryData();
 
 private:
-    sqlite3* db;
+  sqlite3 *db;
 
-    // create a table
-    static void createTable(sqlite3* dbToCreate);
+  // create a table
+  static void createTable(sqlite3 *dbToCreate);
 };
 
 #endif // DATABASEMANAGER_H

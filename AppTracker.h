@@ -7,10 +7,10 @@
 
 class AppTracker {
 
-    // ctor
-    // startTracking Method
+  // ctor
+  // startTracking Method
 
-    // private - database
+  // private - database
 };
 
 #endif // APPTRACKER_H
