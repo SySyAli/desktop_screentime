@@ -1,15 +1,21 @@
-// TODO COMMENTS
+/**
+ * @file DatabaseManager.cpp
+ * @brief Implementation of DatabaseManager.h
+ * @author Syed Ali
+ */
+
 #include "DatabaseManager.h"
+#include <algorithm>
 #include <iostream>
 #include <sqlite3.h>
 
-DatabaseManager::DatabaseManager() {
+DatabaseManager::DatabaseManager() : appEntries({}) {
   sqlite3 *local_db;
   int rc = sqlite3_open("app_usage.db", &local_db);
 
   if (rc != SQLITE_OK) {
-    std::cerr << "Can't open database: " << sqlite3_errmsg(local_db)
-              << std::endl;
+    throw std::runtime_error("Can't open database " +
+                             std::string(sqlite3_errmsg(local_db)));
   }
   db = local_db;
 
@@ -36,36 +42,54 @@ void DatabaseManager::insertData(AppEntry &appEntry) {
       appEntry.setID(insertedId);
 
       std::cout << "Inserted ID: " << insertedId << std::endl;
-      appEntries.push_back(appEntry);
     } else {
-      std::cerr << "Insertion error: " << sqlite3_errmsg(db) << std::endl;
+      throw std::runtime_error("Insertion error: " +
+                               std::string(sqlite3_errmsg(db)));
     }
 
     sqlite3_finalize(stmt);
   } else {
-    std::cerr << "Preparation error: " << sqlite3_errmsg(db) << std::endl;
+    throw std::runtime_error("Preparation error: " +
+                             std::string(sqlite3_errmsg(db)));
   }
 }
 
 void DatabaseManager::queryData() {
-  const char *selectSql = "SELECT * FROM AppUsage";
+  auto currEntries = getAppEntries();
+  std::for_each(appEntries.begin(), appEntries.end(), [](AppEntry &entry) {
+    std::cout << "ID: " << entry.getID() << ", Title: " << entry.getTitle()
+              << ", Start Time: " << entry.getStartTime()
+              << ", End Time: " << entry.getEndTime() << std::endl;
+  });
+}
+
+std::vector<AppEntry> DatabaseManager::getAppEntries() {
+  std::vector<AppEntry> entries;
+  const char *selectSql = "SELECT id, title, startTime, endTime FROM AppUsage";
   sqlite3_stmt *stmt;
   int rc = sqlite3_prepare_v2(db, selectSql, -1, &stmt, nullptr);
 
   if (rc == SQLITE_OK) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
       int id = sqlite3_column_int(stmt, 0);
-      const unsigned char *title = sqlite3_column_text(stmt, 1);
+      const char *title =
+          reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
       auto startTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 2));
       auto endTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 3));
 
-      std::cout << "ID: " << id << ", Title: " << title
-                << ", Start Time: " << startTime << ", End Time: " << endTime
-                << std::endl;
+      AppEntry entry;
+      entry.setID(id);
+      entry.setTitle(std::string(title));
+      entry.setStartTime(startTime);
+      entry.setEndTime(endTime);
+
+      entries.push_back(entry);
     }
     sqlite3_finalize(stmt);
+    appEntries = entries;
+    return appEntries;
   } else {
-    std::cerr << "Query error: " << sqlite3_errmsg(db) << std::endl;
+    throw std::runtime_error("Query error: " + std::string(sqlite3_errmsg(db)));
   }
 }
 
@@ -83,9 +107,7 @@ void DatabaseManager::createTable(sqlite3 *dbToCreate) {
   int rc = sqlite3_exec(dbToCreate, createTableSql, nullptr, nullptr, &errMsg);
 
   if (rc != SQLITE_OK) {
-    std::cerr << "SQL error: " << errMsg << std::endl;
     sqlite3_free(errMsg);
+    throw std::runtime_error("SQL error: " + std::string(errMsg));
   }
 }
-
-std::vector<AppEntry> DatabaseManager::getAppEntries() { return appEntries; }

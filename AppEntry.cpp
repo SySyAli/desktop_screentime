@@ -1,7 +1,8 @@
-//
-// Created by syeda on 12/21/2023.
-//
-
+/**
+ * @file AppEntry
+ * @brief Implementation of AppEntry.h
+ * @author Syed Ali
+ */
 #include "AppEntry.h"
 #include <utility>
 

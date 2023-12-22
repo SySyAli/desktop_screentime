@@ -1,5 +1,5 @@
-#include <iostream>
 #include "AppTracker.h"
+#include <iostream>
 
 // TODO: IMPLEMENTATION
 // TODO: TESTING - github actions

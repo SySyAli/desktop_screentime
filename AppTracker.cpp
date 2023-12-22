@@ -1,17 +1,33 @@
-//
-// Created by syeda on 12/21/2023.
-//
-
+/**
+ * @file AppTracker.cpp
+ * @brief Implementation of AppTracker.h
+ * @author Syed Ali
+ */
 #include "AppTracker.h"
 #include "AppEntry.h"
 #include <iostream>
+
+#ifndef _WIN32
 #include <windows.h>
+#elif _WIN64
+#include <windows.h>
+#endif
 
 AppTracker::AppTracker() : dbManager(DatabaseManager()) {}
 
-// TODO - add conditions for windows!!!!
 [[noreturn]] void AppTracker::startTracking() {
 
+#ifndef _WIN32
+  startTrackingWindows();
+#elif _WIN64
+  startTrackingWindows();
+#else
+  throw std::runtime_error(
+      "Operating Systems other than Windows have not been supported yet!");
+#endif
+}
+
+[[noreturn]] void AppTracker::startTrackingWindows() {
   char windowTitle[256];
   AppEntry prevEntry;
 
