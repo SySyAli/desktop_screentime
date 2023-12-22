@@ -10,12 +10,9 @@
 
 class AppEntry {
 public:
-  // default ctor
-  AppEntry() = delete;
-
-  // alternate ctor
-  AppEntry(std::string ti, std::time_t sT, std::time_t eT,
-           const long long &i = 0);
+  // default/alternate ctor
+  explicit AppEntry(std::string ti = "", std::time_t sT = 0, std::time_t eT = 0,
+                    const long long &i = 0);
 
   // just default the assignment and cctor
   AppEntry(const AppEntry &copy) = default;
@@ -34,6 +31,9 @@ public:
 
   void setEndTime(std::time_t sT);
   [[nodiscard]] std::time_t getEndTime() const;
+
+  // returns whether title is empty
+  bool isEmpty() const;
 
 private:
   long long id;

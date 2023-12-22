@@ -5,12 +5,19 @@
 #ifndef APPTRACKER_H
 #define APPTRACKER_H
 
+#include "DatabaseManager.h"
+
 class AppTracker {
-
+public:
   // ctor
-  // startTracking Method
+  AppTracker();
+  // startTracking Method - make throws error if not windows
+  [[noreturn]] void startTracking();
 
-  // private - database
+  std::vector<AppEntry> getAppEntries();
+
+private:
+  DatabaseManager dbManager;
 };
 
 #endif // APPTRACKER_H

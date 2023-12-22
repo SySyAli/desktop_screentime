@@ -24,3 +24,5 @@ std::time_t AppEntry::getStartTime() const { return startTime; }
 void AppEntry::setEndTime(std::time_t eT) { endTime = eT; }
 
 std::time_t AppEntry::getEndTime() const { return endTime; }
+
+bool AppEntry::isEmpty() const { return title.empty(); }

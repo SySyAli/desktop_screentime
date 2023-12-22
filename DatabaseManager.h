@@ -6,6 +6,7 @@
 #include "AppEntry.h"
 #include <sqlite3.h>
 #include <string>
+#include <vector>
 
 class DatabaseManager {
 public:
@@ -19,9 +20,11 @@ public:
 
   void queryData();
 
+  std::vector<AppEntry> getAppEntries();
+
 private:
   sqlite3 *db;
-
+  std::vector<AppEntry> appEntries;
   // create a table
   static void createTable(sqlite3 *dbToCreate);
 };

@@ -20,7 +20,7 @@ void DatabaseManager::insertData(AppEntry &appEntry) {
   const char *insertSql =
       "INSERT INTO AppUsage (title, startTime, endTime) VALUES (?, ?, ?)";
   sqlite3_stmt *stmt;
-  int rc = sqlite3_prepare_v2(db, insertSql, -1, &stmt, NULL);
+  int rc = sqlite3_prepare_v2(db, insertSql, -1, &stmt, nullptr);
 
   if (rc == SQLITE_OK) {
     sqlite3_bind_text(stmt, 1, appEntry.getTitle().c_str(), -1,
@@ -36,6 +36,7 @@ void DatabaseManager::insertData(AppEntry &appEntry) {
       appEntry.setID(insertedId);
 
       std::cout << "Inserted ID: " << insertedId << std::endl;
+      appEntries.push_back(appEntry);
     } else {
       std::cerr << "Insertion error: " << sqlite3_errmsg(db) << std::endl;
     }
@@ -49,7 +50,7 @@ void DatabaseManager::insertData(AppEntry &appEntry) {
 void DatabaseManager::queryData() {
   const char *selectSql = "SELECT * FROM AppUsage";
   sqlite3_stmt *stmt;
-  int rc = sqlite3_prepare_v2(db, selectSql, -1, &stmt, NULL);
+  int rc = sqlite3_prepare_v2(db, selectSql, -1, &stmt, nullptr);
 
   if (rc == SQLITE_OK) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -79,10 +80,12 @@ void DatabaseManager::createTable(sqlite3 *dbToCreate) {
     ))";
 
   char *errMsg;
-  int rc = sqlite3_exec(dbToCreate, createTableSql, 0, 0, &errMsg);
+  int rc = sqlite3_exec(dbToCreate, createTableSql, nullptr, nullptr, &errMsg);
 
   if (rc != SQLITE_OK) {
     std::cerr << "SQL error: " << errMsg << std::endl;
     sqlite3_free(errMsg);
   }
 }
+
+std::vector<AppEntry> DatabaseManager::getAppEntries() { return appEntries; }
