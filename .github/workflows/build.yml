@@ -9,8 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up CMake, Ninja, and MSVC
-        uses: lukka/get-cmake@v3.19.2
+      - name: Set up CMake
+        uses: actions/setup-cmake@v1
+        with:
+          cmake-version: '3.26'
 
       - name: Configure CMake
         # sqlite3 handled by CMake
