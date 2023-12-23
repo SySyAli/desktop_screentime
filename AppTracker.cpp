@@ -43,7 +43,14 @@ void AppTracker::startTrackingWindows() {
     std::string title(windowTitle);
     time_t now = time(nullptr);
     // convert now to string form
-    char *dt = ctime(&now);
+    char dt[26];
+
+    errno_t err = ctime_s(dt, sizeof(dt), &now);
+
+    if (err) {
+      throw std::runtime_error("Error converting time");
+    }
+
     clock_t curTime = clock();
 
     if (!title.empty()) {
