@@ -29,7 +29,9 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure CMake
+        shell: pwsh
         run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=$env:GITHUB_WORKSPACE\vcpkg\scripts\buildsystems\vcpkg.cmake
+
 
       - name: Build
         run: cmake --build build
