@@ -23,12 +23,14 @@ jobs:
           .\vcpkg\bootstrap-vcpkg.bat
           .\vcpkg\vcpkg install sqlite3:x64-windows
 
+      - name: List installed vcpkg packages
+        run: .\vcpkg\vcpkg list
+
       - name: Set up Visual Studio Environment
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure CMake
-        shell: pwsh
-        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\vcpkg\scripts\buildsystems\vcpkg.cmake"
 
       - name: Build
         run: cmake --build build
