@@ -1,0 +1,23 @@
+name: Build and Run Automated Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up CMake, Ninja, and MSVC
+        uses: lukka/get-cmake@v3.19.2
+
+      - name: Configure CMake
+        # sqlite3 handled by CMake
+        run: cmake -S . -B build -G "Ninja"
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: ./bin/testing
