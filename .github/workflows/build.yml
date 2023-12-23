@@ -35,8 +35,5 @@ jobs:
       - name: Build
         run: cmake --build build
 
-      - name: List files in bin directory
-        run: ls ./bin
-
       - name: Test
-        run: bin\testing
+        run: bin\Debug\testing
