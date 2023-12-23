@@ -30,7 +30,9 @@ jobs:
 
       - name: Configure CMake
         shell: pwsh
-        run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=$env:GITHUB_WORKSPACE\vcpkg\scripts\buildsystems\vcpkg.cmake
+        run: |
+          $toolchainFile = "${{ env.GITHUB_WORKSPACE }}\vcpkg\scripts\buildsystems\vcpkg.cmake"
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="$toolchainFile"
 
 
       - name: Build
