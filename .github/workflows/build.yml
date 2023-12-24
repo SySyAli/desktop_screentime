@@ -39,7 +39,7 @@ jobs:
         run: bin\Debug\tests
 
       - name: Clear CMake Cache
-        run: rm -rf build
+        run: Remove-Item -Path build -Recurse -Force
 
 
   lint:
