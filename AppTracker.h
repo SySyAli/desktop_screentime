@@ -24,6 +24,9 @@ public:
   // return a vector of all the AppEntries from the AppUsage table
   std::vector<AppEntry> getAppEntries();
 
+  // clear the tracking entries
+  void clearTracking();
+
 private:
   // DatabaseManager for the AppTracker
   DatabaseManager dbManager;

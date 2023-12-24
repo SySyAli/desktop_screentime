@@ -63,6 +63,23 @@ void DatabaseManager::queryData() {
   });
 }
 
+void DatabaseManager::clearData() {
+    const char* deleteSql = "DELETE FROM AppUsage";
+    char* errMsg = nullptr;
+    int rc = sqlite3_exec(db, deleteSql, nullptr, nullptr, &errMsg);
+
+    if (rc != SQLITE_OK) {
+        std::string error = "SQL error: ";
+        if (errMsg) {
+            error += errMsg;
+            sqlite3_free(errMsg);
+        }
+        throw std::runtime_error(error);
+    }
+
+    appEntries.clear();
+}
+
 std::vector<AppEntry> DatabaseManager::getAppEntries() {
   std::vector<AppEntry> entries;
   const char *selectSql = "SELECT id, title, startTime, endTime FROM AppUsage";

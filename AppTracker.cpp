@@ -80,3 +80,7 @@ void AppTracker::startTrackingWindows() {
     Sleep(1000); // Check every second, check if this should be changed
   }
 }
+
+void AppTracker::clearTracking() {
+    dbManager.clearData();
+}

@@ -28,6 +28,8 @@ public:
   // prints out the contents of AppEntry
   void queryData();
 
+  void clearData();
+
   // returns a vector of all AppEntries in the AppUsage Table
   std::vector<AppEntry> getAppEntries();
 
