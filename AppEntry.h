@@ -15,7 +15,7 @@ class AppEntry {
 public:
   // alternate ctor - defaults to an empty AppEntry.
   explicit AppEntry(std::string ti = "", std::time_t sT = 0, std::time_t eT = 0,
-                    const long long &i = 0);
+                    long long i = 0);
 
   // defaulted copy ctor
   AppEntry(const AppEntry &copy) = default;
@@ -24,8 +24,8 @@ public:
   AppEntry &operator=(const AppEntry &rhs) = default;
 
   // variety of setters/getters
-  void setID(const long long i);
-  long long getID() const;
+  void setID(long long i);
+  [[nodiscard]] long long getID() const;
 
   void setTitle(const std::string &t);
   [[nodiscard]] std::string getTitle() const;

@@ -22,7 +22,7 @@ enable_testing()
 include(FetchContent)
 FetchContent_Declare(googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG e2239ee6043f73722e7aa812a459f54a28552929  # release-1.11.0
+        GIT_TAG f8d7d77c06936315286eb55f8de22cd23c188571  # release-1.14.0
 )
 FetchContent_GetProperties(googletest)
 if(NOT googletest_POPULATED)
@@ -48,10 +48,12 @@ set(SOURCE_FILES
         tests/AppEntryTest.cpp
         tests/AppTrackerTest.cpp
         tests/DatabaseManagerTest.cpp
+        AppTracker.cpp
+        DatabaseManager.cpp
+        AppEntry.cpp
 )
 
 # Make the project root directory the working directory when we run
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
-add_executable(testing ${SOURCE_FILES})
-add_dependencies(testing gtest)
-target_link_libraries(testing gtest ${CMAKE_THREAD_LIBS_INIT})
+add_executable(tests ${SOURCE_FILES})
+target_link_libraries(tests gtest gtest_main ${SQLite3_LIBRARIES})

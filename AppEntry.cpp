@@ -7,7 +7,7 @@
 #include <utility>
 
 AppEntry::AppEntry(std::string ti, const std::time_t sT, const std::time_t eT,
-                   const long long &i)
+                   const long long i)
     : id(i), title(std::move(ti)), startTime(sT), endTime(eT) {}
 
 void AppEntry::setID(const long long i) { id = i; }
