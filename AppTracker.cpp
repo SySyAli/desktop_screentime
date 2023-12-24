@@ -33,6 +33,18 @@ std::vector<AppEntry> AppTracker::getAppEntries() {
   return dbManager.getAppEntries();
 }
 
+void AppTracker::clearTracking() {
+    dbManager.clearData();
+}
+
+DatabaseManager &AppTracker::getDatabaseManager() {
+    return dbManager;
+}
+
+bool AppTracker::getTrackingBool() const{
+    return tracking;
+}
+
 void AppTracker::startTrackingWindows() {
   char windowTitle[256];
   AppEntry prevEntry;
@@ -81,6 +93,5 @@ void AppTracker::startTrackingWindows() {
   }
 }
 
-void AppTracker::clearTracking() {
-    dbManager.clearData();
-}
+
+

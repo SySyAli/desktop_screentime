@@ -27,6 +27,12 @@ public:
   // clear the tracking entries
   void clearTracking();
 
+  // returns a reference dbManager
+  DatabaseManager& getDatabaseManager();
+
+  // gets tracking boolean
+  [[nodiscard]] bool getTrackingBool() const;
+
 private:
   // DatabaseManager for the AppTracker
   DatabaseManager dbManager;

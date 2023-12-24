@@ -1,5 +1,5 @@
 /**
- * @file DatabaseManagerTest.cpp
+ * @class DatabaseManagerTest
  * @brief Testing for the DatabaseManager Class.
  * @author Syed Ali
  */

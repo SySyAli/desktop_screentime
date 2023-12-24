@@ -1,5 +1,5 @@
 /**
- * @file AppEntryTest.cpp
+ * @file AppEntryTest
  * @brief Testing for the AppEntry Class.
  * @author Syed Ali
  */

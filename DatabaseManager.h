@@ -28,6 +28,7 @@ public:
   // prints out the contents of AppEntry
   void queryData();
 
+  // clears the AppUsage Table
   void clearData();
 
   // returns a vector of all AppEntries in the AppUsage Table
