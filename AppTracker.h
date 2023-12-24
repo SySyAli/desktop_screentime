@@ -28,7 +28,7 @@ public:
   void clearTracking();
 
   // returns a reference dbManager
-  DatabaseManager& getDatabaseManager();
+  DatabaseManager &getDatabaseManager();
 
   // gets tracking boolean
   [[nodiscard]] bool getTrackingBool() const;

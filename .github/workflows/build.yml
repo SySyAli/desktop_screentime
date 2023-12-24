@@ -40,3 +40,22 @@ jobs:
 
       - name: Clear CMake Cache
         run: rm -rf build
+
+
+  lint:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Clang-Format
+        run: choco install llvm
+
+      - name: Run Clang-Format Linter
+        run: |
+          clang-format --version
+          # Adjust the following command as per your project structure and linting rules
+          clang-format -i -style=file $(git ls-files | where { $_ -match '\.(cpp|h)$' })
+          git diff --exit-code || {
+            echo "Linter found unformatted code!"
+            exit 1
+          }

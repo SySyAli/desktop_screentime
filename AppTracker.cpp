@@ -33,17 +33,11 @@ std::vector<AppEntry> AppTracker::getAppEntries() {
   return dbManager.getAppEntries();
 }
 
-void AppTracker::clearTracking() {
-    dbManager.clearData();
-}
+void AppTracker::clearTracking() { dbManager.clearData(); }
 
-DatabaseManager &AppTracker::getDatabaseManager() {
-    return dbManager;
-}
+DatabaseManager &AppTracker::getDatabaseManager() { return dbManager; }
 
-bool AppTracker::getTrackingBool() const{
-    return tracking;
-}
+bool AppTracker::getTrackingBool() const { return tracking; }
 
 void AppTracker::startTrackingWindows() {
   char windowTitle[256];
@@ -92,6 +86,3 @@ void AppTracker::startTrackingWindows() {
     Sleep(1000); // Check every second, check if this should be changed
   }
 }
-
-
-
