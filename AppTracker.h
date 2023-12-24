@@ -11,35 +11,35 @@
  */
 class AppTracker {
 public:
-  // default ctor.
-  AppTracker();
+    // default ctor.
+    AppTracker();
 
-  // startTracking Method -  throws error if OS is not windows. controlled by
-  // tracking boolean
-  void startTracking();
+    // startTracking Method -  throws error if OS is not windows. controlled by
+    // tracking boolean
+    void startTracking();
 
-  // sets tracking boolean to false
-  void stopTracking();
+    // sets tracking boolean to false
+    void stopTracking();
 
-  // return a vector of all the AppEntries from the AppUsage table
-  std::vector<AppEntry> getAppEntries();
+    // return a vector of all the AppEntries from the AppUsage table
+    std::vector<AppEntry> getAppEntries();
 
-  // clear the tracking entries
-  void clearTracking();
+    // clear the tracking entries
+    void clearTracking();
 
-  // returns a reference dbManager
-  DatabaseManager &getDatabaseManager();
+    // returns a reference dbManager
+    DatabaseManager& getDatabaseManager();
 
-  // gets tracking boolean
-  [[nodiscard]] bool getTrackingBool() const;
+    // gets tracking boolean
+    [[nodiscard]] bool getTrackingBool() const;
 
 private:
-  // DatabaseManager for the AppTracker
-  DatabaseManager dbManager;
-  // boolean for tracking
-  bool tracking;
-  // startTracking Method - make throws error if not windows
-  void startTrackingWindows();
+    // DatabaseManager for the AppTracker
+    DatabaseManager dbManager;
+    // boolean for tracking
+    bool tracking;
+    // startTracking Method - make throws error if not windows
+    void startTrackingWindows();
 };
 
 #endif // APPTRACKER_H
