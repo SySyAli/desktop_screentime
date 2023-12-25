@@ -62,7 +62,9 @@ jobs:
       - name: Test
         run: |
           cd bin
-          ./bin/tests
+          cd tests
+          ls
+          ctest
 
 
   linter:
