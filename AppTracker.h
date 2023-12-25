@@ -38,8 +38,10 @@ private:
     DatabaseManager dbManager;
     // boolean for tracking
     bool tracking;
-    // startTracking Method - make throws error if not windows
-    void startTrackingWindows();
+    #ifdef _WIN32
+        // startTracking Method - windows implementation
+        void startTrackingWindows();
+    #endif
 };
 
 #endif // APPTRACKER_H

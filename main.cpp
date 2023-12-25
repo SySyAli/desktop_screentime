@@ -30,5 +30,6 @@ int main()
     }
 
     std::cout << "Tracking stopped." << std::endl;
+    appTracker.clearTracking();
     return 0;
 }

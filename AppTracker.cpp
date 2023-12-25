@@ -7,10 +7,8 @@
 #include "AppEntry.h"
 #include <iostream>
 
-#ifndef _WIN32
-#include <windows.h>
-#elif _WIN64
-#include <windows.h>
+#ifdef _WIN32
+    #include <windows.h>
 #endif
 
 AppTracker::AppTracker()
@@ -21,10 +19,7 @@ AppTracker::AppTracker()
 
 void AppTracker::startTracking()
 {
-
-#ifndef _WIN32
-    startTrackingWindows();
-#elif _WIN64
+#ifdef _WIN32
     startTrackingWindows();
 #else
     throw std::runtime_error("Operating Systems other than Windows have not been supported yet!");
@@ -55,8 +50,8 @@ bool AppTracker::getTrackingBool() const
 {
     return tracking;
 }
-
-void AppTracker::startTrackingWindows()
+#ifdef _WIN32
+    void AppTracker::startTrackingWindows()
 {
     char windowTitle[256];
     AppEntry prevEntry;
@@ -104,3 +99,4 @@ void AppTracker::startTrackingWindows()
         Sleep(1000); // Check every second, check if this should be changed
     }
 }
+#endif

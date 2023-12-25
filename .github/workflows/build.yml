@@ -3,7 +3,7 @@ name: Build and Run Automated Tests
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
@@ -42,7 +42,29 @@ jobs:
         run: Remove-Item -Path build -Recurse -Force
 
 
-  lint:
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ libsqlite3-dev
+
+      - name: Configure CMake
+        run: cmake -S . -B build
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: |
+          cd build
+          ctest
+
+  linter:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
