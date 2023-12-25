@@ -63,8 +63,8 @@ jobs:
         run: |
           cd bin
           ls
-          cd tests
-          ls
+          tests
+
       - name: List build directory
         run: |
           cd build
