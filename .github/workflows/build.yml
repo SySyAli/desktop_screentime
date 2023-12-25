@@ -61,12 +61,7 @@ jobs:
 
       - name: Test
         run: |
-          ls
           cd bin
-          ls
-          cd ..
-          cd build
-          ls
           ctest
 
   linter:
