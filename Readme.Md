@@ -1,14 +1,10 @@
 # Desktop Screentime Tracker
 
 <p align='center'>
-  <a target="_blank" href='https://en.cppreference.com/w/'><img src='https://img.shields.io/badge/C%2B%2B-blue?style=for-the-badge&logo=cplusplus&color=blue' alt="CPP Reference Page"> </a>
-  <a target="_blank" href='https://github.com/SySyAli/desktop_screentime/blob/main/CMakeLists.txt'><img src='https://img.shields.io/badge/CMake-blue?style=for-the-badge&logo=cmake&color=%230096FF
-' alt="CMakeList.txt of desktop_screentime"></a>
-  <a target="_blank" href='https://www.sqlite.org/index.html'><img src='https://img.shields.io/badge/SQLite-blue?style=for-the-badge&logo=sqlite&color=darkgreen
-' alt="SQLite"></a>
- <a target="_blank" href='https://google.github.io/googletest/'><img src="https://img.shields.io/badge/GTest-blue?
-style=for-the-badge&logo=google&labelColor=GTest&color=lightgray" alt="GTest Documentation 
-Page"/></a>
+  <a target="_blank" href='https://en.cppreference.com/w/'><img src='https://img.shields.io/badge/C%2B%2B-blue?style=for-the-badge&logo=cplusplus&color=blue' alt="CPP Reference Page"></a>
+  <a target="_blank" href='https://github.com/SySyAli/desktop_screentime/blob/main/CMakeLists.txt'><img src='https://img.shields.io/badge/CMake-blue?style=for-the-badge&logo=cmake&color=%230096FF' alt="CMakeList.txt of desktop_screentime"></a>
+  <a target="_blank" href='https://www.sqlite.org/index.html'><img src='https://img.shields.io/badge/SQLite-blue?style=for-the-badge&logo=sqlite&color=darkgreen' alt="SQLite"></a>
+ <a target="_blank" href='https://google.github.io/googletest/'><img src="https://img.shields.io/badge/GTest-blue?style=for-the-badge&logo=google&labelColor=GTest&color=lightgray" alt="GTest Documentation Page"/></a>
   <a target="_blank" href='https://github.com/SySyAli/desktop_screentime/actions'><img src='https://img.shields.io/badge/Github%20Actions-blue?style=for-the-badge&logo=githubactions&logoColor=white&color=%231134A6' alt="GitHub Actions for desktop_screentime"></a>
 </p>
 Track and analyze your active window time with the Desktop Screentime Tracker, a C++ and 
