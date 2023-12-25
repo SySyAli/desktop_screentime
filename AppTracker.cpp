@@ -8,7 +8,7 @@
 #include <iostream>
 
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #endif
 
 AppTracker::AppTracker()
@@ -51,7 +51,7 @@ bool AppTracker::getTrackingBool() const
     return tracking;
 }
 #ifdef _WIN32
-    void AppTracker::startTrackingWindows()
+void AppTracker::startTrackingWindows()
 {
     char windowTitle[256];
     AppEntry prevEntry;

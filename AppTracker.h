@@ -38,10 +38,10 @@ private:
     DatabaseManager dbManager;
     // boolean for tracking
     bool tracking;
-    #ifdef _WIN32
-        // startTracking Method - windows implementation
-        void startTrackingWindows();
-    #endif
+#ifdef _WIN32
+    // startTracking Method - windows implementation
+    void startTrackingWindows();
+#endif
 };
 
 #endif // APPTRACKER_H
