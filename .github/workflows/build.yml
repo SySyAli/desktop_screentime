@@ -59,27 +59,10 @@ jobs:
       - name: Build
         run: cmake --build build
 
-      - name: List bin directory
-        run: |
-          cd bin
-          ls
-          ./tests
-
-      - name: List build directory
-        run: |
-          cd build
-          ls
-          cd debug
-          ls
-
       - name: Run Tests
         run: |
           cd bin
-          ls
-          cd tests
-          ls
-          ctest
-
+          ./tests
 
   linter:
     runs-on: windows-latest
