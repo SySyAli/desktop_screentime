@@ -21,6 +21,8 @@ void AppTracker::startTracking()
 {
 #ifdef _WIN32
     startTrackingWindows();
+#elif __linux
+    startTrackingLinux();
 #else
     throw std::runtime_error("Operating Systems other than Windows have not been supported yet!");
 #endif
@@ -98,5 +100,9 @@ void AppTracker::startTrackingWindows()
         }
         Sleep(1000); // Check every second, check if this should be changed
     }
+}
+#elif __linux
+void AppTracker::startTrackingLinux(){
+    throw std::runtime_error("linux is not implemented yet!");
 }
 #endif
