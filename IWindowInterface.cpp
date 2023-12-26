@@ -70,11 +70,19 @@ void WindowsTracker::startTracking()
         auto curTime = std::chrono::system_clock::now();
         const std::time_t t_c = std::chrono::system_clock::to_time_t(curTime);
 
+// For Windows, use ctime_s
+#ifdef _WIN32
         int err = ctime_s(dt, sizeof(dt), &t_c);
-
         if (err) {
             throw std::runtime_error("Error converting time");
         }
+        // For Unix systems (Linux, macOS), use ctime_r
+#else
+        char* res_s = ctime_r(&t_c, dt);
+        if (!res_s) {
+            throw std::runtime_error("Error converting time");
+        }
+#endif
 
         if (!title.empty()) {
             // handle the first entry
