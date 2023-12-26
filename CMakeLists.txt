@@ -38,7 +38,7 @@ add_executable(desktop_screentime main.cpp
         AppEntry.cpp)
 
 ## Link SQLite3 to the executable ##
-target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
+target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
 target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS})
 
 # Testing Executable

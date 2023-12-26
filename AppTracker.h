@@ -41,6 +41,10 @@ private:
 #ifdef _WIN32
     // startTracking Method - windows implementation
     void startTrackingWindows();
+
+    // TODO: Linux implementation
+    // TODO: MacOS implementation
+
 #endif
 };
 
