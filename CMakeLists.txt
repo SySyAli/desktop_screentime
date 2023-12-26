@@ -35,10 +35,19 @@ include_directories(${googletest_SOURCE_DIR}/googletest/include)
 add_executable(desktop_screentime main.cpp
         AppTracker.cpp
         DatabaseManager.cpp
-        AppEntry.cpp)
+        AppEntry.cpp
+        IWindowInterface.cpp
+)
 
 ## Link SQLite3 to the executable ##
-target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
+# Set compiler flags
+if(MSVC)
+    # Using Microsoft Visual C++
+    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
+else()
+    # Assuming GCC or Clang
+    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
+endif()
 target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS})
 
 # Testing Executable
@@ -51,6 +60,7 @@ set(SOURCE_FILES
         AppTracker.cpp
         DatabaseManager.cpp
         AppEntry.cpp
+        IWindowInterface.cpp
 )
 
 # Make the project root directory the working directory when we run

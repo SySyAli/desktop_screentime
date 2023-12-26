@@ -6,7 +6,7 @@
 #include "AppEntry.h"
 #include <utility>
 
-AppEntry::AppEntry(std::string ti, const std::time_t sT, const std::time_t eT, const long long i)
+AppEntry::AppEntry(std::string ti, const TimePoint sT, const TimePoint eT, const long long i)
     : id(i)
     , title(std::move(ti))
     , startTime(sT)
@@ -34,22 +34,22 @@ std::string AppEntry::getTitle() const
     return title;
 }
 
-void AppEntry::setStartTime(std::time_t sT)
+void AppEntry::setStartTime(AppEntry::TimePoint sT)
 {
     startTime = sT;
 }
 
-std::time_t AppEntry::getStartTime() const
+AppEntry::TimePoint AppEntry::getStartTime() const
 {
     return startTime;
 }
 
-void AppEntry::setEndTime(std::time_t eT)
+void AppEntry::setEndTime(AppEntry::TimePoint eT)
 {
     endTime = eT;
 }
 
-std::time_t AppEntry::getEndTime() const
+AppEntry::TimePoint AppEntry::getEndTime() const
 {
     return endTime;
 }

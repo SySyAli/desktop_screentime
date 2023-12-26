@@ -1,15 +1,16 @@
 #include "AppTracker.h"
-#include <atomic>
 #include <iostream>
 #include <thread>
 
-std::atomic<bool> trackingActive(true); // Global flag to control tracking
 AppTracker appTracker;
 
 void startTrackingWrapper()
 {
-
-    appTracker.startTracking(); // Pass the flag to the tracking function
+    try {
+        appTracker.startTracking();
+    } catch (std::runtime_error& e) {
+        throw std::runtime_error(e.what());
+    }
 }
 
 int main()
@@ -30,6 +31,7 @@ int main()
     }
 
     std::cout << "Tracking stopped." << std::endl;
+    std::cout << appTracker << std::endl;
     appTracker.clearTracking();
     return 0;
 }

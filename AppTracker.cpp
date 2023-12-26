@@ -6,103 +6,59 @@
 #include "AppTracker.h"
 #include "AppEntry.h"
 #include <iostream>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#include <algorithm>
 
 AppTracker::AppTracker()
-    : dbManager(DatabaseManager())
-    , tracking(true)
 {
+#ifdef _WIN32
+    windowTracker = std::make_unique<WindowsTracker>();
+#elif __linux__
+    windowTracker = std::make_unique<LinuxTracker>();
+#else
+    throw std::runtime_error("Unsupported OS");
+#endif
+}
+
+std::ostream& operator<<(std::ostream& os, AppTracker& a)
+{
+    std::vector<AppEntry> appEntries = a.getAppEntries();
+
+    std::for_each(appEntries.begin(), appEntries.end(), [&os](AppEntry& entry) {
+        const std::time_t t_s = std::chrono::system_clock::to_time_t(entry.getStartTime());
+        const std::time_t t_e = std::chrono::system_clock::to_time_t(entry.getEndTime());
+        os << "ID: " << entry.getID() << ", Title: " << entry.getTitle()
+           << ", Start Time: " << std::ctime(&t_s) << ", End Time: " << std::ctime(&t_e)
+           << '\n';
+    });
+    return os;
 }
 
 void AppTracker::startTracking()
 {
-#ifdef _WIN32
-    startTrackingWindows();
-#elif __linux
-    startTrackingLinux();
-#else
-    throw std::runtime_error("Operating Systems other than Windows have not been supported yet!");
-#endif
+    windowTracker->startTracking();
 }
 
 void AppTracker::stopTracking()
 {
-    tracking = false;
+    windowTracker->stopTracking();
 }
 
 std::vector<AppEntry> AppTracker::getAppEntries()
 {
-    return dbManager.getAppEntries();
+    return windowTracker->getAppEntries();
 }
 
 void AppTracker::clearTracking()
 {
-    dbManager.clearData();
+    windowTracker->clearTracking();
 }
 
 DatabaseManager& AppTracker::getDatabaseManager()
 {
-    return dbManager;
+    return windowTracker->getDatabaseManager();
 }
 
 bool AppTracker::getTrackingBool() const
 {
-    return tracking;
+    return windowTracker->getTrackingBool();
 }
-#ifdef _WIN32
-void AppTracker::startTrackingWindows()
-{
-    char windowTitle[256];
-    AppEntry prevEntry;
-
-    while (tracking) {
-        HWND hwnd = GetForegroundWindow();
-        GetWindowText(hwnd, windowTitle, sizeof(windowTitle));
-        std::string title(windowTitle);
-        time_t now = time(nullptr);
-        // convert now to string form
-        char dt[26];
-
-        errno_t err = ctime_s(dt, sizeof(dt), &now);
-
-        if (err) {
-            throw std::runtime_error("Error converting time");
-        }
-
-        clock_t curTime = clock();
-
-        if (!title.empty()) {
-            // handle the first entry
-            if (prevEntry.isEmpty()) {
-                std::cout << "Starting time for " << title << " : " << dt;
-
-                prevEntry.setTitle(title);
-                prevEntry.setStartTime(clock());
-            } else if (prevEntry.getTitle() != title) {
-                prevEntry.setEndTime(curTime);
-                std::cout << "Ending time for " << prevEntry.getTitle() << " : " << dt;
-                std::cout << "Duration for " << prevEntry.getTitle() << " : "
-                          << (prevEntry.getEndTime() - prevEntry.getStartTime())
-                        / (long long)CLOCKS_PER_SEC
-                          << std::endl;
-
-                // insert the appEntry
-                dbManager.insertData(prevEntry);
-
-                // figure out the time spent at the website
-                std::cout << "Starting time for " << title << " : " << dt << std::endl;
-                prevEntry.setTitle(title);
-                prevEntry.setStartTime(curTime);
-            }
-        }
-        Sleep(1000); // Check every second, check if this should be changed
-    }
-}
-#elif __linux
-void AppTracker::startTrackingLinux(){
-    throw std::runtime_error("linux is not implemented yet!");
-}
-#endif

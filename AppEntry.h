@@ -3,6 +3,7 @@
 
 #include <ctime>
 #include <string>
+#include <chrono>
 
 /**
  * @class AppEntry
@@ -13,8 +14,12 @@
  */
 class AppEntry {
 public:
+    // Use std::chrono::system_clock::time_point for time tracking
+    using TimePoint = std::chrono::system_clock::time_point;
+
     // alternate ctor - defaults to an empty AppEntry.
-    explicit AppEntry(std::string ti = "", std::time_t sT = 0, std::time_t eT = 0, long long i = 0);
+    explicit AppEntry(std::string ti = "", TimePoint sT = std::chrono::system_clock::now(), TimePoint
+    eT = std::chrono::system_clock::now(), long long i = 0);
 
     // defaulted copy ctor
     AppEntry(const AppEntry& copy) = default;
@@ -29,14 +34,14 @@ public:
     void setTitle(const std::string& t);
     [[nodiscard]] std::string getTitle() const;
 
-    void setStartTime(std::time_t sT);
-    [[nodiscard]] std::time_t getStartTime() const;
+    void setStartTime(TimePoint sT);
+    [[nodiscard]] TimePoint getStartTime() const;
 
-    void setEndTime(std::time_t sT);
-    [[nodiscard]] std::time_t getEndTime() const;
+    void setEndTime(TimePoint sT);
+    [[nodiscard]] TimePoint getEndTime() const;
 
     // returns whether title is empty
-    bool isEmpty() const;
+    [[nodiscard]] bool isEmpty() const;
 
 private:
     // id of AppEntry
@@ -44,9 +49,9 @@ private:
     // title of AppEntry
     std::string title;
     // startTime of Window Visitation
-    std::time_t startTime;
+    TimePoint startTime;
     // endTime of Window Visitation
-    std::time_t endTime;
+    TimePoint endTime;
 };
 
 #endif // APPENTRY_H

@@ -1,7 +1,9 @@
 #ifndef APPTRACKER_H
 #define APPTRACKER_H
 
+#include <memory>
 #include "DatabaseManager.h"
+#include "IWindowInterface.h"
 
 /**
  * @class AppTracker
@@ -13,6 +15,9 @@ class AppTracker {
 public:
     // default ctor.
     AppTracker();
+
+    // operator overload that prints results
+    friend std::ostream& operator<<(std::ostream& os, AppTracker& a);
 
     // startTracking Method -  throws error if OS is not windows. controlled by
     // tracking boolean
@@ -34,18 +39,7 @@ public:
     [[nodiscard]] bool getTrackingBool() const;
 
 private:
-    // DatabaseManager for the AppTracker
-    DatabaseManager dbManager;
-    // boolean for tracking
-    bool tracking;
-#ifdef _WIN32
-    // startTracking Method - windows implementation
-    void startTrackingWindows();
-#elif __linux__
-    void startTrackingLinux();
-    // TODO: Linux implementation
-    // TODO: MacOS implementation
-#endif
+    std::unique_ptr<IWindowInterface> windowTracker;
 };
 
 #endif // APPTRACKER_H

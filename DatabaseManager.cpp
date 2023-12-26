@@ -25,14 +25,17 @@ DatabaseManager::DatabaseManager()
 
 void DatabaseManager::insertData(AppEntry& appEntry)
 {
+    auto startEpoch = std::chrono::system_clock::to_time_t(appEntry.getStartTime());
+    auto endEpoch = std::chrono::system_clock::to_time_t(appEntry.getEndTime());
+
     const char* insertSql = "INSERT INTO AppUsage (title, startTime, endTime) VALUES (?, ?, ?)";
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(db, insertSql, -1, &stmt, nullptr);
 
     if (rc == SQLITE_OK) {
         sqlite3_bind_text(stmt, 1, appEntry.getTitle().c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int64(stmt, 2, static_cast<long long>(appEntry.getStartTime()));
-        sqlite3_bind_int64(stmt, 3, static_cast<long long>(appEntry.getEndTime()));
+        sqlite3_bind_int64(stmt, 2, startEpoch);
+        sqlite3_bind_int64(stmt, 3, endEpoch);
 
         rc = sqlite3_step(stmt);
         if (rc == SQLITE_DONE) {
@@ -55,9 +58,11 @@ void DatabaseManager::queryData()
 {
     auto currEntries = getAppEntries();
     std::for_each(appEntries.begin(), appEntries.end(), [](AppEntry& entry) {
+        const std::time_t t_s = std::chrono::system_clock::to_time_t(entry.getStartTime());
+        const std::time_t t_e = std::chrono::system_clock::to_time_t(entry.getEndTime());
         std::cout << "ID: " << entry.getID() << ", Title: " << entry.getTitle()
-                  << ", Start Time: " << entry.getStartTime()
-                  << ", End Time: " << entry.getEndTime() << std::endl;
+           << ", Start Time: " << std::ctime(&t_s) << ", End Time: " << std::ctime(&t_e)
+           << '\n';
     });
 }
 
@@ -90,14 +95,14 @@ std::vector<AppEntry> DatabaseManager::getAppEntries()
         while (sqlite3_step(stmt) == SQLITE_ROW) {
             int id = sqlite3_column_int(stmt, 0);
             const char* title = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-            auto startTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 2));
-            auto endTime = static_cast<std::time_t>(sqlite3_column_int64(stmt, 3));
+            auto startEpoch = sqlite3_column_int64(stmt, 2);
+            auto endEpoch = sqlite3_column_int64(stmt, 3);
 
             AppEntry entry;
             entry.setID(id);
             entry.setTitle(std::string(title));
-            entry.setStartTime(startTime);
-            entry.setEndTime(endTime);
+            entry.setStartTime(std::chrono::system_clock::from_time_t(startEpoch));
+            entry.setEndTime(std::chrono::system_clock::from_time_t(endEpoch));
 
             entries.push_back(entry);
         }
