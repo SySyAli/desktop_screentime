@@ -1,9 +1,9 @@
 #ifndef APPENTRY_H
 #define APPENTRY_H
 
+#include <chrono>
 #include <ctime>
 #include <string>
-#include <chrono>
 
 /**
  * @class AppEntry
@@ -18,8 +18,8 @@ public:
     using TimePoint = std::chrono::system_clock::time_point;
 
     // alternate ctor - defaults to an empty AppEntry.
-    explicit AppEntry(std::string ti = "", TimePoint sT = std::chrono::system_clock::now(), TimePoint
-    eT = std::chrono::system_clock::now(), long long i = 0);
+    explicit AppEntry(std::string ti = "", TimePoint sT = std::chrono::system_clock::now(),
+        TimePoint eT = std::chrono::system_clock::now(), long long i = 0);
 
     // defaulted copy ctor
     AppEntry(const AppEntry& copy) = default;

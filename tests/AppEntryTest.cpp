@@ -11,24 +11,30 @@ class AppEntryTest : public ::testing::Test { };
 
 TEST_F(AppEntryTest, ConstructorInitializesProperties)
 {
-    AppEntry entry = AppEntry("Test Title", 123, 456, 1);
+    auto t_s = std::chrono::system_clock::now();
+    AppEntry entry("Test Title", t_s, t_s, 1);
     EXPECT_EQ(entry.getTitle(), "Test Title");
-    EXPECT_EQ(entry.getStartTime(), 123);
-    EXPECT_EQ(entry.getEndTime(), 456);
     EXPECT_EQ(entry.getID(), 1);
+
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(entry.getStartTime() - t_s);
+    EXPECT_TRUE(abs(std::chrono::duration<double>(duration).count()) < 0.00001);
+
+    duration = std::chrono::duration_cast<std::chrono::seconds>(entry.getEndTime() - t_s);
+    EXPECT_TRUE(abs(std::chrono::duration<double>(duration).count()) < 0.00001);
 }
 
 TEST_F(AppEntryTest, SettersAndGetters)
 {
+    auto t_s = std::chrono::system_clock::now();
     AppEntry entry;
     entry.setTitle("New Title");
-    entry.setStartTime(100);
-    entry.setEndTime(200);
+    entry.setStartTime(t_s);
+    entry.setEndTime(t_s);
     entry.setID(2);
 
     EXPECT_EQ(entry.getTitle(), "New Title");
-    EXPECT_EQ(entry.getStartTime(), 100);
-    EXPECT_EQ(entry.getEndTime(), 200);
+    EXPECT_EQ(entry.getStartTime(), t_s);
+    EXPECT_EQ(entry.getEndTime(), t_s);
     EXPECT_EQ(entry.getID(), 2);
 }
 

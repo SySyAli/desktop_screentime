@@ -29,12 +29,12 @@ public:
 
     // gets tracking boolean
     [[nodiscard]] virtual bool getTrackingBool() const;
+
 protected:
     // DatabaseManager for the AppTracker
     DatabaseManager dbManager;
     // boolean for tracking
     bool tracking;
-
 };
 
 class WindowsTracker : public IWindowInterface {
@@ -47,4 +47,4 @@ public:
     void startTracking() override;
 };
 
-#endif //WINDOWTRACKER_H
+#endif // WINDOWTRACKER_H

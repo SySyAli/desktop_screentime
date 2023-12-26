@@ -5,17 +5,21 @@
  */
 
 #include "IWindowInterface.h"
-#include <stdexcept>
-#include <iostream>
 #include <chrono>
+#include <iostream>
+#include <stdexcept>
 #ifdef _WIN32
 #include <windows.h>
-//#elif __linux__
-//#include <X11/Xatom.h>
-//#include <X11/Xlib.h>
+// #elif __linux__
+// #include <X11/Xatom.h>
+// #include <X11/Xlib.h>
 #endif
 
-IWindowInterface::IWindowInterface(): dbManager(DatabaseManager()), tracking(true) {}
+IWindowInterface::IWindowInterface()
+    : dbManager(DatabaseManager())
+    , tracking(true)
+{
+}
 
 void IWindowInterface::stopTracking()
 {
@@ -42,8 +46,6 @@ bool IWindowInterface::getTrackingBool() const
     return tracking;
 }
 
-
-
 #ifdef _WIN32
 void WindowsTracker::startTracking()
 {
@@ -54,42 +56,48 @@ void WindowsTracker::startTracking()
         HWND hwnd = GetForegroundWindow();
         GetWindowText(hwnd, windowTitle, sizeof(windowTitle));
         std::string title(windowTitle);
-//        time_t now = time(nullptr);
-//        // convert now to string form
-//        char dt[26];
-//
-//        errno_t err = ctime_s(dt, sizeof(dt), &now);
-//
-//        if (err) {
-//            throw std::runtime_error("Error converting time");
-//        }
+        //        time_t now = time(nullptr);
+        //        // convert now to string form
+        //        char dt[26];
+        //
+        //        errno_t err = ctime_s(dt, sizeof(dt), &now);
+        //
+        //        if (err) {
+        //            throw std::runtime_error("Error converting time");
+        //        }
 
-        auto curTime =  std::chrono::system_clock::now();
+        char dt[26];
+        auto curTime = std::chrono::system_clock::now();
         const std::time_t t_c = std::chrono::system_clock::to_time_t(curTime);
+
+        errno_t err = ctime_s(dt, sizeof(dt), &t_c);
+
+        if (err) {
+            throw std::runtime_error("Error converting time");
+        }
 
         if (!title.empty()) {
             // handle the first entry
             if (prevEntry.isEmpty()) {
-                std::cout << "Starting time for " << title << " : " << std::ctime(&t_c);
+                std::cout << "Starting time for " << title << " : " << dt;
 
                 prevEntry.setTitle(title);
                 prevEntry.setStartTime(curTime);
             } else if (prevEntry.getTitle() != title) {
                 prevEntry.setEndTime(curTime);
                 // Calculate the duration in seconds
-                auto duration = std::chrono::duration_cast<std::chrono::seconds>
-                        (prevEntry.getEndTime() - prevEntry.getStartTime());
+                auto duration = std::chrono::duration_cast<std::chrono::seconds>(
+                    prevEntry.getEndTime() - prevEntry.getStartTime());
 
-
-                std::cout << "Ending time for " << prevEntry.getTitle() << " : " << std::ctime(&t_c);
-                std::cout << "Duration for " << prevEntry.getTitle() << " : "
-                        << duration.count() << " seconds" << std::endl;
+                std::cout << "Ending time for " << prevEntry.getTitle() << " : " << dt;
+                std::cout << "Duration for " << prevEntry.getTitle() << " : " << duration.count()
+                          << " seconds" << std::endl;
 
                 // insert the appEntry
                 dbManager.insertData(prevEntry);
 
                 // figure out the time spent at the website
-                std::cout << "Starting time for " << title << " : " << std::ctime(&t_c) << std::endl;
+                std::cout << "Starting time for " << title << " : " << dt << std::endl;
                 prevEntry.setTitle(title);
                 prevEntry.setStartTime(curTime);
             }
@@ -99,7 +107,8 @@ void WindowsTracker::startTracking()
 }
 #endif
 
-void LinuxTracker::startTracking() {
+void LinuxTracker::startTracking()
+{
     throw std::runtime_error("not implemented yet - linux");
 }
 /*
@@ -115,8 +124,6 @@ void LinuxTracker::startTracking() {
 
 
  */
-
-
 
 /*
  #if __linux__

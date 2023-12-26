@@ -36,7 +36,7 @@ TEST_F(AppTrackerTest, StopTrackingStopsTheLoop)
 TEST_F(AppTrackerTest, ClearTrackingClearsData)
 {
     // Test that clearTracking clears the database
-    AppEntry entry("Test App", 100, 200);
+    AppEntry entry("Test App", std::chrono::system_clock::now(), std::chrono::system_clock::now());
     tracker.getDatabaseManager().insertData(entry);
 
     tracker.clearTracking();
@@ -47,13 +47,19 @@ TEST_F(AppTrackerTest, ClearTrackingClearsData)
 TEST_F(AppTrackerTest, GetAppEntriesReturnsEntries)
 {
     // Insert a test entry
-    AppEntry entry("Test App", 100, 200);
+    auto t_s = std::chrono::system_clock::now();
+    AppEntry entry("Test App", t_s, t_s);
     tracker.getDatabaseManager().insertData(entry);
 
     // Get entries and verify
     auto entries = tracker.getAppEntries();
     ASSERT_EQ(entries.size(), 1);
     EXPECT_EQ(entries[0].getTitle(), "Test App");
-    EXPECT_EQ(entries[0].getStartTime(), 100);
-    EXPECT_EQ(entries[0].getEndTime(), 200);
+
+    auto duration
+        = std::chrono::duration_cast<std::chrono::seconds>(entries[0].getStartTime() - t_s);
+    EXPECT_TRUE(abs(std::chrono::duration<double>(duration).count()) < 0.00001);
+
+    duration = std::chrono::duration_cast<std::chrono::seconds>(entries[0].getEndTime() - t_s);
+    EXPECT_TRUE(abs(std::chrono::duration<double>(duration).count()) < 0.00001);
 }

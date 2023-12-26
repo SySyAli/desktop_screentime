@@ -26,7 +26,8 @@ TEST_F(DatabaseManagerTest, CreateTable)
 TEST_F(DatabaseManagerTest, InsertData)
 {
     // Create a new AppEntry
-    AppEntry entry("Test App", 100, 200);
+    auto t_s = std::chrono::system_clock::now();
+    AppEntry entry("Test App", t_s, t_s);
 
     // Test inserting data into the table
     EXPECT_NO_THROW(dbManager.insertData(entry));
@@ -36,21 +37,28 @@ TEST_F(DatabaseManagerTest, InsertData)
 TEST_F(DatabaseManagerTest, QueryData)
 {
     // Insert a test entry
-    AppEntry entry("Test App", 100, 200);
+    auto t_s = std::chrono::system_clock::now();
+    AppEntry entry("Test App", t_s, t_s);
     dbManager.insertData(entry);
 
     // Query data and check if the entry is present
     auto entries = dbManager.getAppEntries();
     ASSERT_EQ(entries.size(), 1);
     EXPECT_EQ(entries[0].getTitle(), "Test App");
-    EXPECT_EQ(entries[0].getStartTime(), 100);
-    EXPECT_EQ(entries[0].getEndTime(), 200);
+
+    auto duration
+        = std::chrono::duration_cast<std::chrono::seconds>(entries[0].getStartTime() - t_s);
+    EXPECT_TRUE(abs(std::chrono::duration<double>(duration).count()) < 0.00001);
+
+    duration = std::chrono::duration_cast<std::chrono::seconds>(entries[0].getEndTime() - t_s);
+    EXPECT_TRUE(abs(std::chrono::duration<double>(duration).count()) < 0.00001);
 }
 
 TEST_F(DatabaseManagerTest, ClearData)
 {
     // Insert a test entry
-    AppEntry entry("Test App", 100, 200);
+    auto t_s = std::chrono::system_clock::now();
+    AppEntry entry("Test App", t_s, t_s);
     dbManager.insertData(entry);
 
     // Clear data and verify the table is empty

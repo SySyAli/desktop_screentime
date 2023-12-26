@@ -5,8 +5,8 @@
  */
 #include "AppTracker.h"
 #include "AppEntry.h"
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 AppTracker::AppTracker()
 {
@@ -26,9 +26,17 @@ std::ostream& operator<<(std::ostream& os, AppTracker& a)
     std::for_each(appEntries.begin(), appEntries.end(), [&os](AppEntry& entry) {
         const std::time_t t_s = std::chrono::system_clock::to_time_t(entry.getStartTime());
         const std::time_t t_e = std::chrono::system_clock::to_time_t(entry.getEndTime());
-        os << "ID: " << entry.getID() << ", Title: " << entry.getTitle()
-           << ", Start Time: " << std::ctime(&t_s) << ", End Time: " << std::ctime(&t_e)
-           << '\n';
+        char dt_s[26];
+        char dt_e[26];
+        errno_t err_s = ctime_s(dt_s, sizeof(dt_s), &t_s);
+        errno_t err_e = ctime_s(dt_e, sizeof(dt_e), &t_e);
+
+        if (err_s || err_e) {
+            throw std::runtime_error("Error converting time");
+        }
+
+        os << "ID: " << entry.getID() << ", Title: " << entry.getTitle() << ", Start Time: " << dt_s
+           << ", End Time: " << dt_e << '\n';
     });
     return os;
 }

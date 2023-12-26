@@ -1,9 +1,9 @@
 #ifndef APPTRACKER_H
 #define APPTRACKER_H
 
-#include <memory>
 #include "DatabaseManager.h"
 #include "IWindowInterface.h"
+#include <memory>
 
 /**
  * @class AppTracker
