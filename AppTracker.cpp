@@ -28,8 +28,8 @@ std::ostream& operator<<(std::ostream& os, AppTracker& a)
         const std::time_t t_e = std::chrono::system_clock::to_time_t(entry.getEndTime());
         char dt_s[26];
         char dt_e[26];
-        errno_t err_s = ctime_s(dt_s, sizeof(dt_s), &t_s);
-        errno_t err_e = ctime_s(dt_e, sizeof(dt_e), &t_e);
+        int err_s = ctime_s(dt_s, sizeof(dt_s), &t_s);
+        int err_e = ctime_s(dt_e, sizeof(dt_e), &t_e);
 
         if (err_s || err_e) {
             throw std::runtime_error("Error converting time");

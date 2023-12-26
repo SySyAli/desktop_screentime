@@ -60,7 +60,7 @@ void WindowsTracker::startTracking()
         //        // convert now to string form
         //        char dt[26];
         //
-        //        errno_t err = ctime_s(dt, sizeof(dt), &now);
+        //        int err = ctime_s(dt, sizeof(dt), &now);
         //
         //        if (err) {
         //            throw std::runtime_error("Error converting time");
@@ -70,7 +70,7 @@ void WindowsTracker::startTracking()
         auto curTime = std::chrono::system_clock::now();
         const std::time_t t_c = std::chrono::system_clock::to_time_t(curTime);
 
-        errno_t err = ctime_s(dt, sizeof(dt), &t_c);
+        int err = ctime_s(dt, sizeof(dt), &t_c);
 
         if (err) {
             throw std::runtime_error("Error converting time");
