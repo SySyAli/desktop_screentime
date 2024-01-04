@@ -16,6 +16,9 @@ endif()
 # include sqlite3
 find_package(SQLite3 REQUIRED)
 
+# find X11 - linux
+find_package(X11 REQUIRED)
+
 # include testing
 enable_testing()
 # Bring in GoogleTest
@@ -49,6 +52,12 @@ else()
     target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
 endif()
 target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS})
+
+# Link X11 library for Linux build
+if(X11_FOUND)
+    target_link_libraries(desktop_screentime ${X11_LIBRARIES})
+    target_include_directories(desktop_screentime PRIVATE ${X11_INCLUDE_DIR})
+endif()
 
 # Testing Executable
 # Define the source files and dependencies for the executable
