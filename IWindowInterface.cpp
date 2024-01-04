@@ -8,6 +8,7 @@
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
+#include <thread>
 #ifdef _WIN32
 #include <windows.h>
 #elif __linux__
