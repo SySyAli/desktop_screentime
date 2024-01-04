@@ -99,14 +99,11 @@ void WindowsTracker::startTracking()
 #endif
 
 #if __linux__
-std::string getTrackingScreenOS(Display* display)
+std::string getTrackingScreenLinux(Display* display)
 {
-    Display* display = XOpenDisplay(nullptr);
-    if (!display) {
-        throw std::runtime_error("Cannot open display");
-    }
     Window window;
     char* title = nullptr;
+    int revert_to_return;
     int status = XGetInputFocus(display, &window, &revert_to_return);
 
     if (status == Success && window != None) {
@@ -126,7 +123,7 @@ void LinuxTracker::startTracking()
     }
 
     while (tracking) {
-        std::string title = getActiveWindowTitle(display);
+        std::string title = getTrackingScreenLinux(display);
         char dt[26];
         auto curTime = std::chrono::system_clock::now();
         const std::time_t t_c = std::chrono::system_clock::to_time_t(curTime);
