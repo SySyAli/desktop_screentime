@@ -72,7 +72,11 @@ set(SOURCE_FILES
 )
 
 # Make the project root directory the working directory when we run
+# TODO: Add something about X11
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 add_executable(tests ${SOURCE_FILES})
 target_link_libraries(tests gtest gtest_main ${SQLite3_LIBRARIES})
+if(UNIX AND NOT APPLE)
+    target_link_libraries(tests ${X11_LIBRARIES} pthread)
+endif()
 target_include_directories(tests PRIVATE ${SQLite3_INCLUDE_DIRS})
