@@ -169,6 +169,7 @@ void LinuxTracker::startTracking()
 #endif
 
 // TODO
-void MacOSTracker::startTracking() {
+void MacOSTracker::startTracking()
+{
     throw std::runtime_error("MacOS has not been implemented yet!");
 }
