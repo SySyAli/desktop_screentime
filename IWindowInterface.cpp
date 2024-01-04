@@ -167,3 +167,8 @@ void LinuxTracker::startTracking()
     XCloseDisplay(display);
 }
 #endif
+
+// TODO
+void MacOSTracker::startTracking() {
+    throw std::runtime_error("MacOS has not been implemented yet!");
+}

@@ -14,6 +14,8 @@ AppTracker::AppTracker()
     windowTracker = std::make_unique<WindowsTracker>();
 #elif __linux__
     windowTracker = std::make_unique<LinuxTracker>();
+#elif __APPLE__
+    windowTracker = std::make_unique<MacOSTracker>();
 #else
     throw std::runtime_error("Unsupported OS");
 #endif
