@@ -42,22 +42,21 @@ add_executable(desktop_screentime main.cpp
         IWindowInterface.cpp
 )
 
-## Link SQLite3 to the executable ##
-# Set compiler flags
+# Link SQLite3 and possibly X11 and pthread to the executable
 if(MSVC)
     # Using Microsoft Visual C++
     target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
 else()
     # Assuming GCC or Clang
-    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
+    if(X11_FOUND)
+        # Link both SQLite3 and X11 (and pthread for Linux)
+        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} ${X11_LIBRARIES} pthread)
+    else()
+        # Link only SQLite3 and pthread (for Linux without X11)
+        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
+    endif()
 endif()
-target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS})
 
-# Link X11 library for Linux build
-if(X11_FOUND)
-    target_link_libraries(desktop_screentime ${X11_LIBRARIES})
-    target_include_directories(desktop_screentime PRIVATE ${X11_INCLUDE_DIR})
-endif()
 
 # Testing Executable
 # Define the source files and dependencies for the executable
