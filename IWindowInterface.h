@@ -51,4 +51,9 @@ public:
     void startTracking() override;
 };
 
+class MacOSTracker : public IWindowInterface {
+public:
+    void startTracking() override;
+};
+
 #endif // WINDOWTRACKER_H

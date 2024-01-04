@@ -57,6 +57,20 @@ else()
     endif()
 endif()
 
+# linking
+if(MSVC)
+    # Using Microsoft Visual C++
+    target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS})
+else()
+    # Assuming GCC or Clang
+    if(X11_FOUND)
+        target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS} ${X11_LIBRARIES})
+    else()
+        target_include_directories(desktop_screentime PRIVATE ${SQLite3_INCLUDE_DIRS})
+    endif()
+endif()
+
+
 
 # Testing Executable
 # Define the source files and dependencies for the executable
@@ -72,7 +86,6 @@ set(SOURCE_FILES
 )
 
 # Make the project root directory the working directory when we run
-# TODO: Add something about X11
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 add_executable(tests ${SOURCE_FILES})
 target_link_libraries(tests gtest gtest_main ${SQLite3_LIBRARIES})

@@ -100,7 +100,8 @@ void WindowsTracker::startTracking()
 #endif
 
 #if __linux__
-std::string getTrackingScreenLinux(Display* display) {
+std::string getTrackingScreenLinux(Display* display)
+{
     Window window;
     char* title = nullptr;
     int revert_to_return;
