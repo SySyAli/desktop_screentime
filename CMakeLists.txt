@@ -13,11 +13,12 @@ else()
     # Assuming GCC or Clang
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
-# include sqlite3
-find_package(SQLite3 REQUIRED)
 
-# find X11 - linux
-find_package(X11 REQUIRED)
+# Find packages
+find_package(SQLite3 REQUIRED)
+if(UNIX AND NOT APPLE)
+    find_package(X11 REQUIRED)
+endif()
 
 # include testing
 enable_testing()
@@ -42,24 +43,14 @@ add_executable(desktop_screentime main.cpp
         IWindowInterface.cpp
 )
 
-# Link SQLite3 and possibly X11 and pthread to the executable
+# Link libraries
 if(MSVC)
-    # Using Microsoft Visual C++
     target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
-else()
-    # Assuming GCC or Clang
-    if(X11_FOUND)
-        # Link both SQLite3 and X11 (and pthread for Linux)
-        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} ${X11_LIBRARIES} pthread)
-    else()
-        # Link only SQLite3 and pthread (for Linux without X11)
-        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
-    endif()
+elseif(UNIX AND NOT APPLE)
+    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} ${X11_LIBRARIES} pthread)
 endif()
 
-
 # Testing Executable
-# Define the source files and dependencies for the executable
 set(SOURCE_FILES
         tests/main.cpp
         tests/AppEntryTest.cpp
@@ -70,9 +61,9 @@ set(SOURCE_FILES
         AppEntry.cpp
         IWindowInterface.cpp
 )
-
-# Make the project root directory the working directory when we run
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 add_executable(tests ${SOURCE_FILES})
 target_link_libraries(tests gtest gtest_main ${SQLite3_LIBRARIES})
+if(UNIX AND NOT APPLE)
+    target_link_libraries(tests ${X11_LIBRARIES} pthread)
+endif()
 target_include_directories(tests PRIVATE ${SQLite3_INCLUDE_DIRS})
