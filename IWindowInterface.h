@@ -7,7 +7,11 @@
 
 #include "DatabaseManager.h"
 
-// factory pattern
+/**
+ * @class IWindowInterface
+ * @brief Helper Class containing the OS specific implementations of AppTracker.
+ * @author Syed Ali
+ */
 class IWindowInterface {
 public:
     IWindowInterface();
