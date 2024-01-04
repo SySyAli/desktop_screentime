@@ -10,9 +10,9 @@
 #include <stdexcept>
 #ifdef _WIN32
 #include <windows.h>
-// #elif __linux__
-// #include <X11/Xatom.h>
-// #include <X11/Xlib.h>
+#elif __linux__
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
 #endif
 
 IWindowInterface::IWindowInterface()
