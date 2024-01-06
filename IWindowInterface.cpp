@@ -172,8 +172,10 @@ void LinuxTracker::startTracking()
 
 #ifdef __APPLE__
 
-std::string getActiveWindowTitleMac() {
-    CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+std::string getActiveWindowTitleMac()
+{
+    CFArrayRef windowList
+        = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
     if (windowList) {
         for (CFIndex i = 0; i < CFArrayGetCount(windowList); i++) {
             CFDictionaryRef windowInfo = (CFDictionaryRef)CFArrayGetValueAtIndex(windowList, i);
@@ -181,7 +183,8 @@ std::string getActiveWindowTitleMac() {
             int layer;
             CFNumberGetValue(windowLayer, kCFNumberIntType, &layer);
             if (layer == 0) { // Check if it's the active window layer
-                CFStringRef windowTitle = (CFStringRef)CFDictionaryGetValue(windowInfo, kCGWindowName);
+                CFStringRef windowTitle
+                    = (CFStringRef)CFDictionaryGetValue(windowInfo, kCGWindowName);
                 if (windowTitle) {
                     char title[256];
                     CFStringGetCString(windowTitle, title, 256, kCFStringEncodingUTF8);
@@ -195,7 +198,8 @@ std::string getActiveWindowTitleMac() {
     return "";
 }
 
-void MacOSTracker::startTracking() {
+void MacOSTracker::startTracking()
+{
     AppEntry prevEntry;
     while (tracking) {
         std::string title = getActiveWindowTitleMac();
@@ -236,6 +240,5 @@ void MacOSTracker::startTracking() {
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-
 }
 #endif

@@ -50,23 +50,22 @@ add_executable(desktop_screentime main.cpp
         IWindowInterface.cpp
 )
 
-# Link SQLite3 to the executable
-target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
-
-
-# Link pthread and X11 for Linux
-if(UNIX AND NOT APPLE)
+# Link libraries to the executable
+if(MSVC)
+    # Using Microsoft Visual C++
+    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
+elseif(APPLE)
+    # For macOS, link Application Services framework
+    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} "-framework ApplicationServices")
+elseif(UNIX AND NOT APPLE)
+    # For Linux, link pthread and possibly X11
     if(X11_FOUND)
-        target_link_libraries(desktop_screentime PRIVATE ${X11_LIBRARIES} pthread)
+        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} ${X11_LIBRARIES} pthread)
     else()
-        target_link_libraries(desktop_screentime PRIVATE pthread)
+        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
     endif()
 endif()
 
-# Link Application Services for macOS
-if(APPLE)
-    target_link_libraries(desktop_screentime "-framework ApplicationServices")
-endif()
 
 # Testing Executable
 # Define the source files and dependencies for the executable
