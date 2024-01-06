@@ -16,13 +16,15 @@ endif()
 # include sqlite3
 find_package(SQLite3 REQUIRED)
 
-# find X11 - linux
-find_package(X11 REQUIRED)
-
 # Include directories
 include_directories(${SQLite3_INCLUDE_DIRS})
-if(X11_FOUND)
-    include_directories(${X11_INCLUDE_DIR})
+
+# Include X11 for Linux
+if(UNIX AND NOT APPLE)
+    find_package(X11 REQUIRED)
+    if(X11_FOUND)
+        include_directories(${X11_INCLUDE_DIR})
+    endif()
 endif()
 
 # include testing
@@ -48,19 +50,22 @@ add_executable(desktop_screentime main.cpp
         IWindowInterface.cpp
 )
 
-# Link SQLite3 and possibly X11 and pthread to the executable
-if(MSVC)
-    # Using Microsoft Visual C++
-    target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
-else()
-    # Assuming GCC or Clang
+# Link SQLite3 to the executable
+target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES})
+
+
+# Link pthread and X11 for Linux
+if(UNIX AND NOT APPLE)
     if(X11_FOUND)
-        # Link both SQLite3 and X11 (and pthread for Linux)
-        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} ${X11_LIBRARIES} pthread)
+        target_link_libraries(desktop_screentime PRIVATE ${X11_LIBRARIES} pthread)
     else()
-        # Link only SQLite3 and pthread (for Linux without X11)
-        target_link_libraries(desktop_screentime PRIVATE ${SQLite3_LIBRARIES} pthread)
+        target_link_libraries(desktop_screentime PRIVATE pthread)
     endif()
+endif()
+
+# Link Application Services for macOS
+if(APPLE)
+    target_link_libraries(desktop_screentime "-framework ApplicationServices")
 endif()
 
 # Testing Executable
@@ -83,4 +88,9 @@ target_link_libraries(tests gtest gtest_main ${SQLite3_LIBRARIES})
 if(UNIX AND NOT APPLE)
     target_link_libraries(tests ${X11_LIBRARIES} pthread)
 endif()
+# Link Application Services for macOS
+if(APPLE)
+    target_link_libraries(tests "-framework ApplicationServices")
+endif()
+
 target_include_directories(tests PRIVATE ${SQLite3_INCLUDE_DIRS})

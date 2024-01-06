@@ -14,6 +14,8 @@
 #elif __linux__
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
+#elif __APPLE__
+#include <ApplicationServices/ApplicationServices.h>
 #endif
 
 IWindowInterface::IWindowInterface()
@@ -168,8 +170,72 @@ void LinuxTracker::startTracking()
 }
 #endif
 
-// TODO
-void MacOSTracker::startTracking()
-{
-    throw std::runtime_error("MacOS has not been implemented yet!");
+#ifdef __APPLE__
+
+std::string getActiveWindowTitleMac() {
+    CFArrayRef windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+    if (windowList) {
+        for (CFIndex i = 0; i < CFArrayGetCount(windowList); i++) {
+            CFDictionaryRef windowInfo = (CFDictionaryRef)CFArrayGetValueAtIndex(windowList, i);
+            CFNumberRef windowLayer = (CFNumberRef)CFDictionaryGetValue(windowInfo, kCGWindowLayer);
+            int layer;
+            CFNumberGetValue(windowLayer, kCFNumberIntType, &layer);
+            if (layer == 0) { // Check if it's the active window layer
+                CFStringRef windowTitle = (CFStringRef)CFDictionaryGetValue(windowInfo, kCGWindowName);
+                if (windowTitle) {
+                    char title[256];
+                    CFStringGetCString(windowTitle, title, 256, kCFStringEncodingUTF8);
+                    CFRelease(windowList);
+                    return std::string(title);
+                }
+            }
+        }
+        CFRelease(windowList);
+    }
+    return "";
 }
+
+void MacOSTracker::startTracking() {
+    AppEntry prevEntry;
+    while (tracking) {
+        std::string title = getActiveWindowTitleMac();
+        char dt[26];
+        auto curTime = std::chrono::system_clock::now();
+        const std::time_t t_c = std::chrono::system_clock::to_time_t(curTime);
+
+        // unix based systems - ctime_r
+        char* res_s = ctime_r(&t_c, dt);
+        if (!res_s) {
+            throw std::runtime_error("Error converting time");
+        }
+        if (!title.empty()) {
+            // handle the first entry
+            if (prevEntry.isEmpty()) {
+                std::cout << "Starting time for " << title << " : " << dt;
+                prevEntry.setTitle(title);
+                prevEntry.setStartTime(curTime);
+            } else if (prevEntry.getTitle() != title) {
+                prevEntry.setEndTime(curTime);
+                // Calculate the duration in seconds
+                auto duration = std::chrono::duration_cast<std::chrono::seconds>(
+                    prevEntry.getEndTime() - prevEntry.getStartTime());
+
+                std::cout << "Ending time for " << prevEntry.getTitle() << " : " << dt;
+                std::cout << "Duration for " << prevEntry.getTitle() << " : " << duration.count()
+                          << " seconds" << std::endl;
+
+                // insert the appEntry
+                dbManager.insertData(prevEntry);
+
+                // figure out the time spent at the website
+                std::cout << "Starting time for " << title << " : " << dt << std::endl;
+                prevEntry.setTitle(title);
+                prevEntry.setStartTime(curTime);
+            }
+        }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+}
+#endif
